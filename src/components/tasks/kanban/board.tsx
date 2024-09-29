@@ -1,5 +1,12 @@
-import { DndContext } from "@dnd-kit/core";
-import React, { Children } from "react";
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import React from "react";
 
 export const KanbanBoardContainer = ({ children }: React.PropsWithChildren) => {
   return (
@@ -8,7 +15,7 @@ export const KanbanBoardContainer = ({ children }: React.PropsWithChildren) => {
         width: "calc(100% + 64px)",
         height: "calc(100vh - 64px)",
         display: "flex",
-        justifyContent: "column",
+        flexDirection: "column",
         margin: "-32px",
       }}
     >
@@ -18,7 +25,7 @@ export const KanbanBoardContainer = ({ children }: React.PropsWithChildren) => {
           height: "100%",
           display: "flex",
           padding: "32px",
-          overflow: "scroll",
+          overflow: "auto",
         }}
       >
         {children}
@@ -26,7 +33,31 @@ export const KanbanBoardContainer = ({ children }: React.PropsWithChildren) => {
     </div>
   );
 };
+type Props = {
+  onDragEnd: (event: DragEndEvent) => void;
+};
 
-export const KanbanBoard = ({ children }: React.PropsWithChildren) => {
-  return <DndContext>{children}</DndContext>;
+export const KanbanBoard = ({
+  children,
+  onDragEnd,
+}: React.PropsWithChildren<Props>) => {
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  return (
+    <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+      {children}
+    </DndContext>
+  );
 };
