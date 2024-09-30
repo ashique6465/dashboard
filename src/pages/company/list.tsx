@@ -1,7 +1,8 @@
 import CustomAvatar from "@/components/custom-avatar";
 import { Text } from "@/components/text";
 import { COMPANIES_LIST_QUERY } from "@/graphql/queries";
-import { Company } from "@/graphql/schema.types";
+// import { Company } from "@/graphql/schema.types";
+import { CompaniesListQuery } from "@/graphql/types";
 import { currencyNumber } from "@/utilities";
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -12,13 +13,14 @@ import {
   List,
   useTable,
 } from "@refinedev/antd";
-import { getDefaultFilter, useGo } from "@refinedev/core";
+import { getDefaultFilter, HttpError, useGo } from "@refinedev/core";
+import { GetFieldsFromList } from "@refinedev/nestjs-query";
 import { Input, Space, Table } from "antd";
 
 export const CompanyList = ({children}:React.PropsWithChildren) => {
   console.log("CompanyList component mounted");
   const go = useGo();
-  const { tableProps, filters } = useTable({
+  const { tableProps, filters } = useTable<GetFieldsFromList<CompaniesListQuery>,HttpError,GetFieldsFromList<CompaniesListQuery>>({
     resource: "companies",
     onSearch:(values) =>{
       return [
