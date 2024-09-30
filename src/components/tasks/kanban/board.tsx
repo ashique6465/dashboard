@@ -25,7 +25,7 @@ export const KanbanBoardContainer = ({ children }: React.PropsWithChildren) => {
           height: "100%",
           display: "flex",
           padding: "32px",
-          overflow: "auto",
+          overflow: "scroll",
         }}
       >
         {children}

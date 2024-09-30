@@ -39,9 +39,9 @@ type ProjectCardProps = {
 
 const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
   const { token } = theme.useToken();
- const {edit} = useNavigation();
+  const { edit } = useNavigation();
 
- const{mutate} = useDelete()
+  const { mutate } = useDelete();
   const dropdownItems = useMemo(() => {
     const dropdownItems: MenuProps["items"] = [
       {
@@ -49,7 +49,7 @@ const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
         key: "1",
         icon: <EyeOutlined />,
         onClick: () => {
-          edit('tasks',id,'replace')
+          edit("tasks", id, "replace");
         },
       },
       {
@@ -59,13 +59,12 @@ const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
         icon: <DeleteOutlined />,
         onClick: () => {
           mutate({
-            resource:'tasks',
+            resource: "tasks",
             id,
-            meta:{
-              operation:'tasks'
-            }
-
-          })
+            meta: {
+              operation: "tasks",
+            },
+          });
         },
       },
     ];
@@ -97,12 +96,18 @@ const ProjectCard = ({ id, title, dueDate, users }: ProjectCardProps) => {
       <Card
         size="small"
         title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
-        onClick={() => edit()}
+        onClick={() => edit("tasks", id, 'replace')}
         extra={
           <Dropdown
             trigger={["click"]}
             menu={{
               items: dropdownItems,
+              onPointerDown: (e) => {
+                e.stopPropagation();
+              },
+              onClick: (e) => {
+                e.domEvent.stopPropagation();
+              },
             }}
             placement="bottom"
             arrow={{ pointAtCenter: true }}
